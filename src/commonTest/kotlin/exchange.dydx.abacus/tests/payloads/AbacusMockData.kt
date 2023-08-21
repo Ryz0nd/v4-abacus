@@ -29,4 +29,5 @@ class AbacusMockData {
     internal val squidStatusMock = SquidStatusMock()
     internal val localizationMock = LocalizationMock()
     internal val v4OnChainMock = V4OnChainMock()
+    internal val transfersMock = TransfersMock()
 }
