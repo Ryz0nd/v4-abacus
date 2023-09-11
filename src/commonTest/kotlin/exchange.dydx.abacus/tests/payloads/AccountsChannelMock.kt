@@ -44,7 +44,7 @@ internal class AccountsChannelMock {
               }
             ],
             "account": {
-              "starkKey": "01de24f8468f0590b80c12c87ae9e247ef3278d4683d875296051495b2ad0100",
+              "starkKey": "hidden",
               "positionId": "30915",
               "equity": "205935.352966",
               "freeCollateral": "187233.155294",
@@ -1066,7 +1066,7 @@ internal class AccountsChannelMock {
                 "id": "dace1648-c854-5aed-9879-88899bf647a3",
                 "userId": "11480ece-f71d-5012-bb7f-bf1f74b749a7",
                 "accountNumber": 0,
-                "starkKey": "01de24f8468f0590b80c12c87ae9e247ef3278d4683d875296051495b2ad0100",
+                "starkKey": "hidden",
                 "quoteBalance": "-222333.2879",
                 "lastTransactionId": "45929918",
                 "updatedAt": "2022-08-01T19:53:29.686Z",
@@ -1089,7 +1089,7 @@ internal class AccountsChannelMock {
           "id": "dace1648-c854-5aed-9879-88899bf647a3",
           "contents": {
             "account": {
-              "starkKey": "01de24f8468f0590b80c12c87ae9e247ef3278d4683d875296051495b2ad0100",
+              "starkKey": "hidden",
               "positionId": "30915",
               "equity": "205935.352966",
               "freeCollateral": "187233.155294",

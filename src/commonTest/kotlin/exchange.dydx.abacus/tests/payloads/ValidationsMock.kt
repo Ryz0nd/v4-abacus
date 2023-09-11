@@ -78,7 +78,7 @@ internal class ValidationsMock {
             "orders": [
             ],
             "account": {
-              "starkKey": "01de24f8468f0590b80c12c87ae9e247ef3278d4683d875296051495b2ad0100",
+              "starkKey": "hidden",
               "positionId": "30915",
               "equity": "205935.352966",
               "freeCollateral": "187233.155294",
@@ -141,7 +141,7 @@ internal class ValidationsMock {
             "orders": [
             ],
             "account": {
-              "starkKey": "01de24f8468f0590b80c12c87ae9e247ef3278d4683d875296051495b2ad0100",
+              "starkKey": "hidden",
               "positionId": "30915",
               "equity": "205935.352966",
               "freeCollateral": "187233.155294",
