@@ -205,6 +205,15 @@ open class StateManagerAdaptor(
                 didSetIndexerConfig()
             }
         }
+
+    internal var ethAddress: String? = null
+        set(value) {
+            if (field != value) {
+                field = value
+                didSetEthAddress(field)
+            }
+        }
+
     private var indexerTimer: LocalTimerProtocol? = null
         set(value) {
             if (field !== value) {
@@ -382,6 +391,9 @@ open class StateManagerAdaptor(
         } else {
             indexerConfig = null
         }
+    }
+
+    open fun didSetEthAddress(ethAddress: String?) {
     }
 
     internal open fun bestEffortConnectIndexer() {

@@ -60,4 +60,16 @@ internal class UserMock {
           }
         }
     """.trimIndent()
+
+    internal val screenRestricted = """
+        {
+           "restricted":true
+        }
+    """.trimIndent()
+
+    internal val screenNotRestricted = """
+        {
+           "restricted":false
+        }
+    """.trimIndent()
 }

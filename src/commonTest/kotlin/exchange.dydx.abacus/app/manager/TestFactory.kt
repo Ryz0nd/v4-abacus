@@ -124,6 +124,10 @@ class TestRest() : RestProtocol {
 
     init {
         setResponse(
+            "https://dydx-v4-shared-resources.vercel.app/v4/screen",
+            mock.userMock.screenNotRestricted
+        )
+        setResponse(
             "https://dydx-v4-shared-resources.vercel.app/v4/markets.json",
             mock.marketsConfigurations.configurations
         )

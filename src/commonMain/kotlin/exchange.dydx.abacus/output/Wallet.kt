@@ -12,6 +12,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class User(
     val isRegistered: Boolean,
+    val isRestriced: Boolean?,
     val email: String?,
     val username: String?,
     val feeTierId: String?,
@@ -30,6 +31,7 @@ data class User(
             DebugLogger.log("creating Account User\n")
             data?.let {
                 val isRegistered = parser.asBool(data["isRegistered"]) ?: false
+                val isRestriced = parser.asBool(data["isRestriced"]) ?: false
                 val email = parser.asString(data["email"])
                 val username = parser.asString(data["username"])
                 val feeTierId = parser.asString(data["feeTierId"])
@@ -44,6 +46,7 @@ data class User(
                 val walletId = parser.asString(data["walletId"])
                 if (makerFeeRate != null && takerFeeRate != null) {
                     return if (existing?.isRegistered != isRegistered ||
+                        existing.isRestriced != isRestriced ||
                         existing.email != email ||
                         existing.username != username ||
                         existing.feeTierId != feeTierId ||
@@ -59,6 +62,7 @@ data class User(
                     ) {
                         User(
                             isRegistered,
+                            isRestriced,
                             email,
                             username,
                             feeTierId,

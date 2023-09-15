@@ -15,6 +15,9 @@ internal class UserProcessor(parser: ParserProtocol) : BaseProcessor(parser) {
             "makerVolume30D" to "makerVolume30D",
             "takerVolume30D" to "takerVolume30D",
             "fees30D" to "fees30D"
+        ),
+        "bool" to iMapOf(
+            "restricted" to "isRestricted",
         )
     )
 

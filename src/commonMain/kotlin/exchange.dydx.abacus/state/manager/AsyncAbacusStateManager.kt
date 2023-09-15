@@ -126,6 +126,16 @@ class AsyncAbacusStateManager(
             }
         }
 
+    var ethAddress: String? = null
+        set(value) {
+            if (field != value) {
+                field = value
+                ioImplementations.threading?.async(ThreadingType.abacus) {
+                    adaptor?.ethAddress = field
+                }
+            }
+        }
+
     var accountAddress: String? = null
         set(value) {
             field = value

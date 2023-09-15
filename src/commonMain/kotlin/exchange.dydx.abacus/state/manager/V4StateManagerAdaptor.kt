@@ -19,6 +19,7 @@ import exchange.dydx.abacus.state.app.V4Environment
 import exchange.dydx.abacus.state.app.adaptors.V4TransactionErrors
 import exchange.dydx.abacus.state.manager.configs.V4StateManagerConfigs
 import exchange.dydx.abacus.state.modal.TransferInputField
+import exchange.dydx.abacus.state.modal.historicalFundings
 import exchange.dydx.abacus.state.modal.onChainAccountBalances
 import exchange.dydx.abacus.state.modal.onChainEquityTiers
 import exchange.dydx.abacus.state.modal.onChainFeeTiers
@@ -30,6 +31,7 @@ import exchange.dydx.abacus.state.modal.squidTokens
 import exchange.dydx.abacus.utils.CoroutineTimer
 import exchange.dydx.abacus.utils.IMap
 import exchange.dydx.abacus.utils.IOImplementations
+import exchange.dydx.abacus.utils.ServerTime
 import exchange.dydx.abacus.utils.UIImplementations
 import exchange.dydx.abacus.utils.iMapOf
 import exchange.dydx.abacus.utils.isAddressValid
@@ -117,6 +119,25 @@ class V4StateManagerAdaptor(
     private val MAX_NUM_BLOCK_DELAY = 10
 
     private var lastValidatorCallTime: Instant? = null
+
+    override fun didSetEthAddress(ethAddress: String?) {
+        if (readyToConnect && ethAddress != null) {
+            val url = configs.publicApiUrl("screen")
+            if (url != null) {
+                get(
+                    url,
+                    iMapOf("address" to ethAddress),
+                    null,
+                    false
+                ) { response, httpCode ->
+                    if (success(httpCode) && response != null) {
+                        val oldState = stateMachine.state
+                        update(stateMachine.screened(response), oldState)
+                    }
+                }
+            }
+        }
+    }
 
     override fun didSetSocketConnected(socketConnected: Boolean) {
         super.didSetSocketConnected(socketConnected)
@@ -980,7 +1001,8 @@ class V4StateManagerAdaptor(
         if (apiState?.abnormalState() == true || oldValue?.abnormalState() == true) {
             val indexerTime = lastIndexerCallTime?.toEpochMilliseconds()?.toDouble()
             val validatorTime = lastValidatorCallTime?.toEpochMilliseconds()?.toDouble()
-            val interval = if (indexerTime != null) (Clock.System.now().toEpochMilliseconds().toDouble() - indexerTime) else null
+            val interval = if (indexerTime != null) (Clock.System.now().toEpochMilliseconds()
+                .toDouble() - indexerTime) else null
             val params = mapOf(
                 "lastSuccessfulIndexerRPC" to indexerTime,
                 "lastSuccessfulFullNodeRPC" to validatorTime,

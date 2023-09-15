@@ -143,6 +143,17 @@ internal fun TradingStateMachine.receivedTransfers(
     } else StateChanges(iListOf<Changes>())
 }
 
+internal fun TradingStateMachine.screened(payload: String): StateChanges {
+    val json = Json.parseToJsonElement(payload)
+    return try {
+        val payload = parser.asMap(json.jsonObject)
+        this.wallet = walletProcessor.receivedUser(wallet, payload)
+        return StateChanges(iListOf(Changes.wallet), null)
+    } catch (e: Exception) {
+        StateChanges(iListOf())
+    }
+}
+
 internal fun TradingStateMachine.orderCanceled(
     orderId: String,
     subaccountNumber: Int
