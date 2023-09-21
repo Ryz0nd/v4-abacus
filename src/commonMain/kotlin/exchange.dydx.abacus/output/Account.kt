@@ -832,6 +832,7 @@ data class SubaccountTransfer(
                 val id = parser.asString(data["id"])
                 val updatedAt =
                     parser.asDatetime(data["confirmedAt"]) ?: parser.asDatetime(data["createdAt"])
+                    ?: parser.asDatetime(data["parsedAt"])
                 val updatedAtMilliseconds = updatedAt?.toEpochMilliseconds()?.toDouble()
                 val resources = parser.asMap(data["resources"])?.let {
                     SubaccountTransferResources.create(existing?.resources, parser, it)
@@ -887,7 +888,8 @@ data class SubaccountTransfer(
                 val time1 = (obj as SubaccountTransfer).updatedAtMilliseconds
                 val time2 =
                     (parser.asDatetime(itemData["confirmedAt"])
-                        ?: parser.asDatetime(itemData["createdAt"]))?.toEpochMilliseconds()
+                        ?: parser.asDatetime(itemData["createdAt"])
+                        ?: parser.asDatetime(itemData["parsedAt"]))?.toEpochMilliseconds()
                         ?.toDouble()
                 ParsingHelper.compare(time1, time2 ?: 0.0, false)
             }, { _, obj, itemData ->

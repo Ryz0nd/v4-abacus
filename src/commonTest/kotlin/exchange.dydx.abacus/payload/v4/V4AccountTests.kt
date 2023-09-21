@@ -402,6 +402,36 @@ class V4AccountTests : V4BaseTests() {
                 }
             """.trimIndent()
         )
+
+        test(
+            {
+                perp.socket(testWsUrl, mock.transfersMock.channel_data_2, 0, null)
+            },
+            """
+                {
+                    "wallet": {
+                        "account": {
+                            "subaccounts": {
+                                "0": {
+                                    "transfers": [
+                                        {
+                                            "id": "dydx1lzr023hy3x7muerfwz3e7a80xvwd6cv7rxtz8h/0",
+                                            "transactionHash": "F89C6482DAA779D92BDBC51313C0F29435E7D2355C35EB035DE78A2DA0407903"
+                                        },
+                                        {},
+                                        {},
+                                        {},
+                                        {},
+                                        {
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            """.trimIndent()
+        )
     }
 
     private fun testSubaccountFillsChannelData() {

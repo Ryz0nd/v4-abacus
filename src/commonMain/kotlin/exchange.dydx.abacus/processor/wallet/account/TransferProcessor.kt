@@ -9,6 +9,7 @@ import exchange.dydx.abacus.utils.iMapOf
 import exchange.dydx.abacus.utils.iMutableMapOf
 import exchange.dydx.abacus.utils.mutable
 import exchange.dydx.abacus.utils.safeSet
+import kotlinx.datetime.Clock
 
 internal class TransferProcessor(parser: ParserProtocol) : BaseProcessor(parser) {
     private val transferKeyMap = iMapOf(
@@ -90,6 +91,8 @@ internal class TransferProcessor(parser: ParserProtocol) : BaseProcessor(parser)
         if (modified["id"] == null) {
             modified.safeSet("id", parser.asString(payload["transactionHash"]))
         }
+        modified["parsedAt"] = Clock.System.now()
+
         updateResource(modified)
         return modified
     }

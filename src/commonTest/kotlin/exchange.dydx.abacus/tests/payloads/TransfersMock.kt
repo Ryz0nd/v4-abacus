@@ -118,4 +118,32 @@ internal class TransfersMock {
           }
         }
     """.trimIndent()
+
+    val channel_data_2 = """
+        {
+           "type":"channel_data",
+           "connection_id":"b1d64471-e8e4-49d9-99a8-bf2acffd4c6b",
+           "message_id":49,
+           "id":"dydx1lzr023hy3x7muerfwz3e7a80xvwd6cv7rxtz8h/0",
+           "channel":"v4_subaccounts",
+           "version":"2.4.0",
+           "contents":{
+              "transfers":{
+                 "sender":{
+                    "address":"dydx1g2ygh8ufgwwpg5clp2qh3tmcmlewuyt2z6px8k",
+                    "subaccountNumber":0
+                 },
+                 "recipient":{
+                    "address":"dydx1lzr023hy3x7muerfwz3e7a80xvwd6cv7rxtz8h",
+                    "subaccountNumber":0
+                 },
+                 "symbol":"USDC",
+                 "size":"100",
+                 "type":"TRANSFER_IN",
+                 "transactionHash":"F89C6482DAA779D92BDBC51313C0F29435E7D2355C35EB035DE78A2DA0407903"
+              }
+           }
+        }
+    """.trimIndent()
+
 }
