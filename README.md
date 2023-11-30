@@ -51,7 +51,7 @@ The Android app (https://github.com/dydxprotocol/native-android) has the Gradle 
 
 # Web #
 
-Abacuas generates Javascript and Typescript files with the following command:
+Abacus generates Javascript and Typescript files with the following command:
 
 > ./gradlew assembleJsPackage
 
