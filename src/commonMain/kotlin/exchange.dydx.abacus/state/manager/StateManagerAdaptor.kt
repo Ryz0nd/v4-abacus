@@ -7,7 +7,13 @@ import exchange.dydx.abacus.output.SubaccountOrder
 import exchange.dydx.abacus.output.TransferRecordType
 import exchange.dydx.abacus.output.UsageRestriction
 import exchange.dydx.abacus.output.input.OrderType
-import exchange.dydx.abacus.protocols.*
+import exchange.dydx.abacus.protocols.AnalyticsEvent
+import exchange.dydx.abacus.protocols.DataNotificationProtocol
+import exchange.dydx.abacus.protocols.LocalTimerProtocol
+import exchange.dydx.abacus.protocols.StateNotificationProtocol
+import exchange.dydx.abacus.protocols.ThreadingType
+import exchange.dydx.abacus.protocols.TransactionCallback
+import exchange.dydx.abacus.protocols.ProtocolOptions
 import exchange.dydx.abacus.responses.ParsingError
 import exchange.dydx.abacus.responses.ParsingErrorType
 import exchange.dydx.abacus.responses.ParsingException

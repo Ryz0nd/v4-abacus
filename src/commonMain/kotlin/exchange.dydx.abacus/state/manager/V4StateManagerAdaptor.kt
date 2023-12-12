@@ -2,7 +2,16 @@ package exchange.dydx.abacus.state.manager
 
 import exchange.dydx.abacus.output.UsageRestriction
 import exchange.dydx.abacus.output.input.TransferType
-import exchange.dydx.abacus.protocols.*
+import exchange.dydx.abacus.protocols.AnalyticsEvent
+import exchange.dydx.abacus.protocols.DataNotificationProtocol
+import exchange.dydx.abacus.protocols.LocalTimerProtocol
+import exchange.dydx.abacus.protocols.QueryType
+import exchange.dydx.abacus.protocols.StateNotificationProtocol
+import exchange.dydx.abacus.protocols.ThreadingType
+import exchange.dydx.abacus.protocols.TransactionCallback
+import exchange.dydx.abacus.protocols.TransactionType
+import exchange.dydx.abacus.protocols.run
+import exchange.dydx.abacus.protocols.ProtocolOptions
 import exchange.dydx.abacus.responses.ParsingError
 import exchange.dydx.abacus.state.app.adaptors.V4TransactionErrors
 import exchange.dydx.abacus.state.manager.configs.V4StateManagerConfigs
