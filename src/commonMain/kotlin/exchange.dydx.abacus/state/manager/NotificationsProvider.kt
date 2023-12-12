@@ -9,6 +9,7 @@ import exchange.dydx.abacus.output.SubaccountFill
 import exchange.dydx.abacus.output.SubaccountOrder
 import exchange.dydx.abacus.output.input.OrderStatus
 import exchange.dydx.abacus.output.input.OrderType
+import exchange.dydx.abacus.protocols.NotificationsProviderOptions
 import exchange.dydx.abacus.protocols.ParserProtocol
 import exchange.dydx.abacus.state.modal.TradingStateMachine
 import exchange.dydx.abacus.utils.IList
@@ -29,7 +30,8 @@ import kollections.toIMap
 class NotificationsProvider(
     private val uiImplementations: UIImplementations,
     private val parser: ParserProtocol,
-    private val jsonEncoder: JsonEncoder
+    private val jsonEncoder: JsonEncoder,
+    private val options: NotificationsProviderOptions?,
 ) {
     internal fun buildNotifications(
         stateMachine: TradingStateMachine,
@@ -64,6 +66,7 @@ class NotificationsProvider(
         2. Order doesn't have an average filled price
          */
         val notifications = mutableMapOf<String, Notification>()
+        val lastSeenTimestamp = options?.lastSeenTimestamp ?: 0
         val subaccount =
             stateMachine.state?.subaccount(subaccountNumber) ?: return kollections.iMapOf()
 
@@ -104,12 +107,14 @@ class NotificationsProvider(
             }
 
             for (fill in fillsList) {
-                val fillId = fill.id
-                val notificationId = "fill:$fillId"
-                notifications.typedSafeSet(
-                    notificationId,
-                    createNotificationForFill(stateMachine, fill)
-                )
+                if (fill.createdAtMilliseconds >= lastSeenTimestamp) {
+                    val fillId = fill.id
+                    val notificationId = "fill:$fillId"
+                    notifications.typedSafeSet(
+                        notificationId,
+                        createNotificationForFill(stateMachine, fill)
+                    )
+                }
             }
         }
         return notifications

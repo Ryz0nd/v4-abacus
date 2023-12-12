@@ -270,6 +270,16 @@ interface DataNotificationProtocol {
 }
 
 @JsExport
+data class ProtocolOptions (
+    val notificationsProvider: NotificationsProviderOptions
+)
+
+@JsExport
+data class NotificationsProviderOptions (
+    val lastSeenTimestamp: Int,
+)
+
+@JsExport
 enum class ThreadingType {
     main, abacus, network
 }

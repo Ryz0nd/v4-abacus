@@ -2,14 +2,7 @@ package exchange.dydx.abacus.state.manager
 
 import exchange.dydx.abacus.output.Restriction
 import exchange.dydx.abacus.output.input.SelectionOption
-import exchange.dydx.abacus.protocols.DataNotificationProtocol
-import exchange.dydx.abacus.protocols.FileLocation
-import exchange.dydx.abacus.protocols.LocalizerProtocol
-import exchange.dydx.abacus.protocols.ParserProtocol
-import exchange.dydx.abacus.protocols.StateNotificationProtocol
-import exchange.dydx.abacus.protocols.ThreadingType
-import exchange.dydx.abacus.protocols.TransactionCallback
-import exchange.dydx.abacus.protocols.readCachedTextFile
+import exchange.dydx.abacus.protocols.*
 import exchange.dydx.abacus.responses.ParsingError
 import exchange.dydx.abacus.state.app.adaptors.V4TransactionErrors
 import exchange.dydx.abacus.state.app.helper.DynamicLocalizer
@@ -217,7 +210,9 @@ class AsyncAbacusStateManager(
     val ioImplementations: IOImplementations,
     val uiImplementations: UIImplementations,
     val stateNotification: StateNotificationProtocol? = null,
-    val dataNotification: DataNotificationProtocol? = null
+    val dataNotification: DataNotificationProtocol? = null,
+    val options: ProtocolOptions? = null
+
 ) {
     init {
         if (appConfigs.enableLogger) {
@@ -527,6 +522,7 @@ class AsyncAbacusStateManager(
                 appConfigs,
                 stateNotification,
                 dataNotification,
+                options,
             )
         }
     }

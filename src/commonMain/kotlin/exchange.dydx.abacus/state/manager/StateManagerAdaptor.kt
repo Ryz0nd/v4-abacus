@@ -7,12 +7,7 @@ import exchange.dydx.abacus.output.SubaccountOrder
 import exchange.dydx.abacus.output.TransferRecordType
 import exchange.dydx.abacus.output.UsageRestriction
 import exchange.dydx.abacus.output.input.OrderType
-import exchange.dydx.abacus.protocols.AnalyticsEvent
-import exchange.dydx.abacus.protocols.DataNotificationProtocol
-import exchange.dydx.abacus.protocols.LocalTimerProtocol
-import exchange.dydx.abacus.protocols.StateNotificationProtocol
-import exchange.dydx.abacus.protocols.ThreadingType
-import exchange.dydx.abacus.protocols.TransactionCallback
+import exchange.dydx.abacus.protocols.*
 import exchange.dydx.abacus.responses.ParsingError
 import exchange.dydx.abacus.responses.ParsingErrorType
 import exchange.dydx.abacus.responses.ParsingException
@@ -217,6 +212,7 @@ open class StateManagerAdaptor(
     val appConfigs: AppConfigs,
     var stateNotification: StateNotificationProtocol?,
     var dataNotification: DataNotificationProtocol?,
+    var protocolOptions: ProtocolOptions?,
 ) {
     var stateMachine: TradingStateMachine = PerpTradingStateMachine(
         environment,
@@ -244,8 +240,9 @@ open class StateManagerAdaptor(
 
     internal val jsonEncoder = JsonEncoder()
     internal val parser = Parser()
+    internal val notificationsProviderOptions = protocolOptions?.notificationsProvider
     private val notificationsProvider =
-        NotificationsProvider(uiImplementations, parser, jsonEncoder)
+        NotificationsProvider(uiImplementations, parser, jsonEncoder, notificationsProviderOptions)
 
     private var subaccountsTimer: LocalTimerProtocol? = null
         set(value) {
