@@ -584,6 +584,7 @@ open class StateManagerAdaptor(
 
         subaccountsTimer = null
         screenAccountAddress()
+        retrieveAccountHistoricalTradingRewards()
     }
 
     private fun didSetAccountAddressRestriction(accountAddressRestriction: Restriction?) {
