@@ -7,8 +7,8 @@ internal class SquidTokenProcessor(parser: ParserProtocol) : BaseProcessor(parse
     private val keyMap = mapOf(
         "string" to mapOf(
             "name" to "stringKey",
-            "address" to "type",
-            "logoURI" to "iconUrl",
+            "token_contract" to "type",
+            "logo_uri" to "iconUrl",
         ),
     )
 

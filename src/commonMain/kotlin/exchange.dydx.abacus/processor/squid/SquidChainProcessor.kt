@@ -6,10 +6,10 @@ import exchange.dydx.abacus.protocols.ParserProtocol
 internal class SquidChainProcessor(parser: ParserProtocol) : BaseProcessor(parser) {
     private val keyMap = mapOf(
         "string" to mapOf(
-            "chainName" to "stringKey",
+            "chain_name" to "stringKey",
             "networkIdentifier" to "stringKey",
-            "chainId" to "type",
-            "chainIconURI" to "iconUrl",
+            "chain_id" to "type",
+            "logo_uri" to "iconUrl",
         ),
     )
 

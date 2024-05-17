@@ -22,15 +22,12 @@ import exchange.dydx.abacus.state.manager.HumanReadableSubaccountTransferPayload
 import exchange.dydx.abacus.state.manager.HumanReadableTransferPayload
 import exchange.dydx.abacus.state.manager.HumanReadableWithdrawPayload
 import exchange.dydx.abacus.state.manager.pendingCctpWithdraw
-import exchange.dydx.abacus.state.model.TradingStateMachine
-import exchange.dydx.abacus.state.model.TransferInputField
+import exchange.dydx.abacus.state.model.*
 import exchange.dydx.abacus.state.model.squidChains
 import exchange.dydx.abacus.state.model.squidRoute
 import exchange.dydx.abacus.state.model.squidRouteV2
 import exchange.dydx.abacus.state.model.squidStatus
 import exchange.dydx.abacus.state.model.squidTokens
-import exchange.dydx.abacus.state.model.squidV2SdkInfo
-import exchange.dydx.abacus.state.model.transfer
 import exchange.dydx.abacus.utils.AnalyticsUtils
 import exchange.dydx.abacus.utils.IMap
 import exchange.dydx.abacus.utils.Logger
@@ -76,7 +73,8 @@ internal class OnboardingSupervisor(
             OnboardingConfigs.SquidVersion.V2,
             OnboardingConfigs.SquidVersion.V2DepositOnly,
             OnboardingConfigs.SquidVersion.V2WithdrawalOnly -> {
-                retrieveTransferAssets()
+//                retrieveTransferAssets()
+                retrieveTransferAssets2()
                 retrieveCctpChainIds()
             }
         }
@@ -109,6 +107,26 @@ internal class OnboardingSupervisor(
             }
         }
     }
+private fun retrieveTransferAssets2() {
+    Logger.e({"hELLOOO CAN ANYONE SEE ME?"})
+    val oldState = stateMachine.state
+    val chainsUrl = helper.configs.skipV1Chains()
+    val assetsUrl = helper.configs.skipV1Assets()
+    if (chainsUrl != null) {
+        helper.get(chainsUrl, null, null) { _, response, httpCode, _ ->
+            if (helper.success(httpCode) && response != null) {
+                update(stateMachine.skipV1Chains(response), oldState)
+            }
+        }
+    }
+    if (assetsUrl != null) {
+        helper.get(assetsUrl, null, null) { _, response, httpCode, _ ->
+            if (helper.success(httpCode) && response != null) {
+                update(stateMachine.skipV1Assets(response), oldState)
+            }
+        }
+    }
+}
 
     private fun retrieveTransferTokens() {
         val oldState = stateMachine.state
