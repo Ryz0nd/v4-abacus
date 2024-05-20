@@ -1,9 +1,9 @@
-package exchange.dydx.abacus.processor.squid
+package exchange.dydx.abacus.processor.router
 
 import exchange.dydx.abacus.processor.base.BaseProcessor
 import exchange.dydx.abacus.protocols.ParserProtocol
 
-internal class SquidChainProcessor(parser: ParserProtocol) : BaseProcessor(parser) {
+internal class SkipChainProcessor(parser: ParserProtocol) : BaseProcessor(parser) {
     private val keyMap = mapOf(
         "string" to mapOf(
             "chain_name" to "stringKey",

@@ -73,23 +73,12 @@ import exchange.dydx.abacus.state.model.trade
 import exchange.dydx.abacus.state.model.tradeInMarket
 import exchange.dydx.abacus.state.model.transfer
 import exchange.dydx.abacus.state.model.triggerOrders
-import exchange.dydx.abacus.utils.AnalyticsUtils
-import exchange.dydx.abacus.utils.CoroutineTimer
-import exchange.dydx.abacus.utils.GoodTil
-import exchange.dydx.abacus.utils.IList
-import exchange.dydx.abacus.utils.IMap
-import exchange.dydx.abacus.utils.IMutableList
-import exchange.dydx.abacus.utils.IOImplementations
-import exchange.dydx.abacus.utils.JsonEncoder
-import exchange.dydx.abacus.utils.Parser
+import exchange.dydx.abacus.utils.*
 import exchange.dydx.abacus.utils.ParsingHelper
 import exchange.dydx.abacus.utils.SHORT_TERM_ORDER_DURATION
 import exchange.dydx.abacus.utils.ServerTime
-import exchange.dydx.abacus.utils.UIImplementations
 import exchange.dydx.abacus.utils.iMapOf
 import exchange.dydx.abacus.utils.mutable
-import exchange.dydx.abacus.utils.toJsonPrettyPrint
-import exchange.dydx.abacus.utils.values
 import kollections.JsExport
 import kollections.iListOf
 import kollections.iMutableListOf
@@ -132,6 +121,7 @@ open class StateManagerAdaptor(
         Formatter(uiImplementations.formatter),
         127,
         false,
+        useSkipProcessor=appConfigs.routerVersion == AppConfigs.RouterVersion.SkipV1
     )
 
     internal var indexerConfig: IndexerURIs?
@@ -922,6 +912,8 @@ open class StateManagerAdaptor(
 
                 val input = state?.input
                 val oldInput = oldState?.input
+                val oldAssets = oldState?.input?.transfer?.depositOptions?.assets
+                val newAssets = oldState?.input?.transfer?.depositOptions?.assets
                 if (input !== oldInput) {
                     dataNotification.inputChanged(input)
                 }

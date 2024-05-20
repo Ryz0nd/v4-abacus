@@ -65,7 +65,7 @@ internal fun V4StateManagerAdaptor.retrieveDepositExchanges() {
                 }
             }
             exchangeList = exchanges
-            stateMachine.squidProcessor.exchangeDestinationChainId = configs.nobleChainId()
+            stateMachine.routingProcessor.exchangeDestinationChainId = configs.nobleChainId()
         }
     }
 }
@@ -86,7 +86,7 @@ private fun V4StateManagerAdaptor.retrieveDepositRouteV1(state: PerpetualState?)
     val fromChain = state?.input?.transfer?.chain
     val fromToken = state?.input?.transfer?.token
     val fromAmount = parser.asDecimal(state?.input?.transfer?.size?.size)?.let {
-        val decimals = parser.asInt(stateMachine.squidProcessor.selectedTokenDecimals(fromToken))
+        val decimals = parser.asInt(stateMachine.routingProcessor.selectedTokenDecimals(fromToken))
         if (decimals != null) {
             (it * Numeric.decimal.TEN.pow(decimals)).toBigInteger()
         } else {
@@ -144,7 +144,7 @@ private fun V4StateManagerAdaptor.retrieveDepositRouteV2(state: PerpetualState?)
     val fromChain = state?.input?.transfer?.chain
     val fromToken = state?.input?.transfer?.token
     val fromAmount = parser.asDecimal(state?.input?.transfer?.size?.size)?.let {
-        val decimals = parser.asInt(stateMachine.squidProcessor.selectedTokenDecimals(fromToken))
+        val decimals = parser.asInt(stateMachine.routingProcessor.selectedTokenDecimals(fromToken))
         if (decimals != null) {
             (it * Numeric.decimal.TEN.pow(decimals)).toBigInteger()
         } else {

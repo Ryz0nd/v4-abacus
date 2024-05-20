@@ -30,6 +30,7 @@ import exchange.dydx.abacus.state.model.onChainUserStats
 import exchange.dydx.abacus.state.model.squidChains
 import exchange.dydx.abacus.state.model.squidTokens
 import exchange.dydx.abacus.state.model.updateHeight
+import exchange.dydx.abacus.state.v2.supervisor.OnboardingConfigs
 import exchange.dydx.abacus.utils.CoroutineTimer
 import exchange.dydx.abacus.utils.IMap
 import exchange.dydx.abacus.utils.IOImplementations
@@ -293,6 +294,13 @@ class V4StateManagerAdaptor(
     override fun didSetReadyToConnect(readyToConnect: Boolean) {
         super.didSetReadyToConnect(readyToConnect)
         if (readyToConnect) {
+            when (appConfigs.routerVersion) {
+                AppConfigs.RouterVersion.SkipV1 -> {
+                    retrieveSkipTransferChains()
+                    retrieveSkipTransferAssets()
+                    return
+                } else -> {}
+            }
             when (appConfigs.squidVersion) {
                 AppConfigs.SquidVersion.V1 -> {
                     retrieveTransferChains()
@@ -302,8 +310,8 @@ class V4StateManagerAdaptor(
                 AppConfigs.SquidVersion.V2,
                 AppConfigs.SquidVersion.V2DepositOnly,
                 AppConfigs.SquidVersion.V2WithdrawalOnly -> {
-//                    retrieveTransferAssets()
-                    retrieveTransferAssets2()
+                    Logger.e({"did set ready to connect old running"})
+                    retrieveTransferAssets()
                     retrieveCctpChainIds()
                 }
             }
@@ -748,9 +756,7 @@ class V4StateManagerAdaptor(
         }
     }
 
-//    squid one. bring it back and abstract above it
     private fun retrieveTransferAssets() {
-        Logger.e({"hELLOOO CAN ANYONE SEE ME?"})
         val oldState = stateMachine.state
         val url = configs.squidV2Assets()
         val squidIntegratorId = environment.squidIntegratorId
@@ -763,11 +769,10 @@ class V4StateManagerAdaptor(
             }
         }
     }
-    private fun retrieveTransferAssets2() {
-        Logger.e({"hELLOOO CAN ANYONE SEE ME?"})
+
+    private fun retrieveSkipTransferChains() {
         val oldState = stateMachine.state
         val chainsUrl = configs.skipV1Chains()
-        val assetsUrl = configs.skipV1Assets()
         if (chainsUrl != null) {
             get(chainsUrl, null, null) { _, response, httpCode, _ ->
                 if (success(httpCode) && response != null) {
@@ -775,6 +780,11 @@ class V4StateManagerAdaptor(
                 }
             }
         }
+    }
+
+    private fun retrieveSkipTransferAssets() {
+        val oldState = stateMachine.state
+        val assetsUrl = configs.skipV1Assets()
         if (assetsUrl != null) {
             get(assetsUrl, null, null) { _, response, httpCode, _ ->
                 if (success(httpCode) && response != null) {

@@ -64,6 +64,13 @@ internal class OnboardingSupervisor(
     }
 
     private fun retrieveSquidRoutes() {
+        when (configs.routerVersion) {
+            OnboardingConfigs.RouterVersion.SkipV1 -> {
+                retrieveSkipTransferChains()
+                retrieveSkipTransferAssets()
+                return
+            } else -> {}
+        }
         when (configs.squidVersion) {
             OnboardingConfigs.SquidVersion.V1 -> {
                 retrieveTransferChains()
@@ -73,8 +80,7 @@ internal class OnboardingSupervisor(
             OnboardingConfigs.SquidVersion.V2,
             OnboardingConfigs.SquidVersion.V2DepositOnly,
             OnboardingConfigs.SquidVersion.V2WithdrawalOnly -> {
-//                retrieveTransferAssets()
-                retrieveTransferAssets2()
+                retrieveTransferAssets()
                 retrieveCctpChainIds()
             }
         }
@@ -107,11 +113,9 @@ internal class OnboardingSupervisor(
             }
         }
     }
-private fun retrieveTransferAssets2() {
-    Logger.e({"hELLOOO CAN ANYONE SEE ME?"})
+private fun retrieveSkipTransferChains() {
     val oldState = stateMachine.state
     val chainsUrl = helper.configs.skipV1Chains()
-    val assetsUrl = helper.configs.skipV1Assets()
     if (chainsUrl != null) {
         helper.get(chainsUrl, null, null) { _, response, httpCode, _ ->
             if (helper.success(httpCode) && response != null) {
@@ -119,6 +123,11 @@ private fun retrieveTransferAssets2() {
             }
         }
     }
+
+}
+    private fun retrieveSkipTransferAssets() {
+    val oldState = stateMachine.state
+    val assetsUrl = helper.configs.skipV1Assets()
     if (assetsUrl != null) {
         helper.get(assetsUrl, null, null) { _, response, httpCode, _ ->
             if (helper.success(httpCode) && response != null) {
@@ -180,7 +189,7 @@ private fun retrieveTransferAssets2() {
                     }
                 }
                 ExchangeConfig.exchangeList = exchanges
-                stateMachine.squidProcessor.exchangeDestinationChainId =
+                stateMachine.routingProcessor.exchangeDestinationChainId =
                     helper.configs.nobleChainId()
             }
         }
@@ -230,7 +239,7 @@ private fun retrieveTransferAssets2() {
         val fromToken = state?.input?.transfer?.token
         val fromAmount = helper.parser.asDecimal(state?.input?.transfer?.size?.size)?.let {
             val decimals =
-                helper.parser.asInt(stateMachine.squidProcessor.selectedTokenDecimals(fromToken))
+                helper.parser.asInt(stateMachine.routingProcessor.selectedTokenDecimals(fromToken))
             if (decimals != null) {
                 (it * Numeric.decimal.TEN.pow(decimals)).toBigInteger()
             } else {
@@ -292,7 +301,7 @@ private fun retrieveTransferAssets2() {
         val fromToken = state?.input?.transfer?.token
         val fromAmount = helper.parser.asDecimal(state?.input?.transfer?.size?.size)?.let {
             val decimals =
-                helper.parser.asInt(stateMachine.squidProcessor.selectedTokenDecimals(fromToken))
+                helper.parser.asInt(stateMachine.routingProcessor.selectedTokenDecimals(fromToken))
             if (decimals != null) {
                 (it * Numeric.decimal.TEN.pow(decimals)).toBigInteger()
             } else {
