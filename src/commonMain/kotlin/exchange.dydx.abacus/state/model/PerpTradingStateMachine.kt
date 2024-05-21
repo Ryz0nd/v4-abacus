@@ -1,6 +1,5 @@
 package exchange.dydx.abacus.state.model
 
-import exchange.dydx.abacus.processor.router.Squid.SkipProcessor
 import exchange.dydx.abacus.protocols.LocalizerProtocol
 import exchange.dydx.abacus.state.app.helper.Formatter
 import exchange.dydx.abacus.state.manager.V4Environment

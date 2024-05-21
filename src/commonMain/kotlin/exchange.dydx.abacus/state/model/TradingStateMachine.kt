@@ -33,7 +33,7 @@ import exchange.dydx.abacus.processor.configs.ConfigsProcessor
 import exchange.dydx.abacus.processor.launchIncentive.LaunchIncentiveProcessor
 import exchange.dydx.abacus.processor.markets.MarketsSummaryProcessor
 import exchange.dydx.abacus.processor.router.IRouterProcessor
-import exchange.dydx.abacus.processor.router.Squid.SkipProcessor
+import exchange.dydx.abacus.processor.router.Skip.SkipProcessor
 import exchange.dydx.abacus.processor.router.Squid.SquidProcessor
 import exchange.dydx.abacus.processor.wallet.WalletProcessor
 import exchange.dydx.abacus.protocols.LocalizerProtocol

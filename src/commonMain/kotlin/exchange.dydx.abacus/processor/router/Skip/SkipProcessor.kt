@@ -124,25 +124,7 @@ internal class SkipProcessor(parser: ParserProtocol) : BaseProcessor(parser), IR
         payload: Map<String, Any>,
         requestId: String?
     ): Map<String, Any>? {
-        var modified = mutableMapOf<String, Any>()
-        existing?.let {
-            modified = it.mutable()
-        }
-
-        val processor = SquidRouteV2Processor(parser)
-        modified.safeSet(
-            "transfer.route",
-            processor.received(null, payload) as MutableMap<String, Any>,
-        )
-        if (requestId != null) {
-            modified.safeSet("transfer.route.requestPayload.requestId", requestId)
-        }
-        if (parser.asNativeMap(existing?.get("transfer"))?.get("type") == "DEPOSIT") {
-            val value = usdcAmount(modified)
-            modified.safeSet("transfer.size.usdcSize", value)
-        }
-
-        return modified
+        throw Error("Not Implemented")
     }
 
     override fun usdcAmount(data: Map<String, Any>): Double? {

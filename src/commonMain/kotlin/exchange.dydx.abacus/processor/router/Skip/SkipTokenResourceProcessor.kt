@@ -1,4 +1,4 @@
-package exchange.dydx.abacus.processor.router
+package exchange.dydx.abacus.processor.router.Skip
 
 import exchange.dydx.abacus.processor.base.BaseProcessor
 import exchange.dydx.abacus.protocols.ParserProtocol
