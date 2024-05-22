@@ -4,6 +4,7 @@ import exchange.dydx.abacus.processor.base.BaseProcessor
 import exchange.dydx.abacus.processor.router.*
 import exchange.dydx.abacus.protocols.ParserProtocol
 import exchange.dydx.abacus.state.manager.CctpConfig.cctpChainIds
+import exchange.dydx.abacus.utils.Logger
 import exchange.dydx.abacus.utils.mutable
 import exchange.dydx.abacus.utils.safeSet
 
@@ -280,9 +281,11 @@ internal class SquidProcessor(parser: ParserProtocol) : BaseProcessor(parser), I
         val options = mutableListOf<Any>()
 
         val selectedChainId = chainId ?: defaultChainId()
+        Logger.e({"selectedChainId: $selectedChainId"})
         selectedChainId?.let {
             this.tokens?.let {
                 for (token in it) {
+                    Logger.e({"token: $token"})
                     parser.asNativeMap(token)?.let { token ->
                         if (parser.asString(token.get("chainId")) == selectedChainId) {
                             options.add(processor.received(null, token))
@@ -293,6 +296,7 @@ internal class SquidProcessor(parser: ParserProtocol) : BaseProcessor(parser), I
         }
 
         options.sortBy { parser.asString(parser.asNativeMap(it)?.get("stringKey")) }
+        Logger.e({"options: $options"})
         return options
     }
 

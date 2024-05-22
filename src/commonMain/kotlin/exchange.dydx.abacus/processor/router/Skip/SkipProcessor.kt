@@ -2,8 +2,9 @@ package exchange.dydx.abacus.processor.router.Squid
 
 import exchange.dydx.abacus.processor.base.BaseProcessor
 import exchange.dydx.abacus.processor.router.*
-import exchange.dydx.abacus.processor.router.SkipChainProcessor
-import exchange.dydx.abacus.processor.router.SkipTokenProcessor
+import exchange.dydx.abacus.processor.router.Skip.SkipChainProcessor
+import exchange.dydx.abacus.processor.router.Skip.SkipTokenProcessor
+import exchange.dydx.abacus.processor.router.Skip.SkipTokenResourceProcessor
 import exchange.dydx.abacus.protocols.ParserProtocol
 import exchange.dydx.abacus.state.manager.CctpConfig.cctpChainIds
 import exchange.dydx.abacus.utils.Logger
@@ -13,8 +14,8 @@ import exchange.dydx.abacus.utils.safeSet
 internal class SkipProcessor(parser: ParserProtocol) : BaseProcessor(parser), IRouterProcessor {
     override var chains: List<Any>? = null
     override var tokens: List<Any>? = null
-    private var skipTokens: Map<String, Map<String, Array<Any>>>? = null
     override var exchangeDestinationChainId: String? = null
+    val sharedRouterProcessor = SharedRouterProcessor(parser)
 
     override fun receivedV2SdkInfo(
         existing: Map<String, Any>?,
@@ -51,6 +52,7 @@ internal class SkipProcessor(parser: ParserProtocol) : BaseProcessor(parser), IR
         if (this.chains != null) {
             return existing
         }
+
         this.chains = parser.asNativeList(payload["chains"])
         val c = this.chains
         Logger.e({"chains:$c"})
@@ -78,7 +80,7 @@ internal class SkipProcessor(parser: ParserProtocol) : BaseProcessor(parser), IR
             return existing
         }
 
-        val chainToAssetsMap = payload.get("chain_to_assets_map") as Map<String, Map<String, Array<Any>>>?
+        val chainToAssetsMap = payload["chain_to_assets_map"] as Map<*, *>?
         var modified = mutableMapOf<String, Any>()
         existing?.let {
             modified = it.mutable()
@@ -128,11 +130,7 @@ internal class SkipProcessor(parser: ParserProtocol) : BaseProcessor(parser), IR
     }
 
     override fun usdcAmount(data: Map<String, Any>): Double? {
-        var toAmountUSD = parser.asString(parser.value(data, "transfer.route.toAmountUSD"))
-        toAmountUSD = toAmountUSD?.replace(",", "")
-        var toAmount = parser.asString(parser.value(data, "transfer.route.toAmount"))
-        toAmount = toAmount?.replace(",", "")
-        return parser.asDouble(toAmountUSD) ?: parser.asDouble(toAmount)
+        return sharedRouterProcessor.usdcAmount(data)
     }
 
     override fun receivedStatus(
