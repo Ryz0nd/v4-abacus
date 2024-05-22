@@ -3,6 +3,7 @@ package exchange.dydx.abacus.processor.router.Squid
 import exchange.dydx.abacus.processor.base.BaseProcessor
 import exchange.dydx.abacus.processor.router.*
 import exchange.dydx.abacus.processor.router.Skip.SkipChainProcessor
+import exchange.dydx.abacus.processor.router.Skip.SkipChainResourceProcessor
 import exchange.dydx.abacus.processor.router.Skip.SkipTokenProcessor
 import exchange.dydx.abacus.processor.router.Skip.SkipTokenResourceProcessor
 import exchange.dydx.abacus.protocols.ParserProtocol
@@ -55,7 +56,6 @@ internal class SkipProcessor(parser: ParserProtocol) : BaseProcessor(parser), IR
 
         this.chains = parser.asNativeList(payload["chains"])
         val c = this.chains
-        Logger.e({"chains:$c"})
         var modified = mutableMapOf<String, Any>()
         existing?.let {
             modified = it.mutable()
@@ -126,7 +126,25 @@ internal class SkipProcessor(parser: ParserProtocol) : BaseProcessor(parser), IR
         payload: Map<String, Any>,
         requestId: String?
     ): Map<String, Any>? {
-        throw Error("Not Implemented")
+        var modified = mutableMapOf<String, Any>()
+        existing?.let {
+            modified = it.mutable()
+        }
+
+        val processor = SquidRouteV2Processor(parser)
+        modified.safeSet(
+            "transfer.route",
+            processor.received(null, payload) as MutableMap<String, Any>,
+        )
+        if (requestId != null) {
+            modified.safeSet("transfer.route.requestPayload.requestId", requestId)
+        }
+        if (parser.asNativeMap(existing?.get("transfer"))?.get("type") == "DEPOSIT") {
+            val value = usdcAmount(modified)
+            modified.safeSet("transfer.size.usdcSize", value)
+        }
+
+        return modified
     }
 
     override fun usdcAmount(data: Map<String, Any>): Double? {
@@ -156,7 +174,8 @@ internal class SkipProcessor(parser: ParserProtocol) : BaseProcessor(parser), IR
     }
 
     override fun defaultChainId(): String? {
-        val selectedChain = parser.asNativeMap(this.chains?.firstOrNull())
+        val selectedChain = parser.asNativeMap(this.chains?.find{ parser.asString(parser.asNativeMap(it)?.get("chain_id")) === "1" })
+
         return parser.asString(selectedChain?.get("chain_id"))
     }
 
@@ -187,9 +206,8 @@ internal class SkipProcessor(parser: ParserProtocol) : BaseProcessor(parser), IR
         return chainId?.let { cid ->
             // Retrieve the list of filtered tokens for the given chainId
             val filteredTokens = this.filteredTokens(cid)?.mapNotNull {
-                parser.asString(parser.asNativeMap(it)?.get("address"))
+                parser.asString(parser.asNativeMap(it)?.get("denom"))
             }.orEmpty()
-
             // Find a matching CctpChainTokenInfo and check if its tokenAddress is in the filtered tokens
             cctpChainIds?.firstOrNull { it.chainId == cid && filteredTokens.contains(it.tokenAddress) }?.tokenAddress
                 ?: run {
@@ -205,7 +223,7 @@ internal class SkipProcessor(parser: ParserProtocol) : BaseProcessor(parser), IR
             this.chains?.find {
                 parser.asString(parser.asNativeMap(it)?.get("chainId")) == chainId
             }?.let {
-                val processor = SquidChainResourceProcessor(parser)
+                val processor = SkipChainResourceProcessor(parser)
                 parser.asNativeMap(it)?.let { payload ->
                     chainResources[chainId] = processor.received(null, payload)
                 }
@@ -217,7 +235,7 @@ internal class SkipProcessor(parser: ParserProtocol) : BaseProcessor(parser), IR
     override fun tokenResources(chainId: String?): Map<String, Any>? {
         val tokenResources = mutableMapOf<String, Any>()
         filteredTokens(chainId)?.forEach {
-            parser.asString(parser.asNativeMap(it)?.get("address"))?.let { key ->
+            parser.asString(parser.asNativeMap(it)?.get("denom"))?.let { key ->
                 val processor = SkipTokenResourceProcessor(parser)
                 parser.asNativeMap(it)?.let { payload ->
                     tokenResources[key] = processor.received(null, payload)

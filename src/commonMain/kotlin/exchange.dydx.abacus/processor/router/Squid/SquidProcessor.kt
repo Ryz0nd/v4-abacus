@@ -219,6 +219,9 @@ internal class SquidProcessor(parser: ParserProtocol) : BaseProcessor(parser), I
                 parser.asString(parser.asNativeMap(it)?.get("address"))
             }.orEmpty()
 
+            Logger.e({ "cctpChainIds:$cctpChainIds" })
+            Logger.e({ "filteredTokens:$filteredTokens" })
+
             // Find a matching CctpChainTokenInfo and check if its tokenAddress is in the filtered tokens
             cctpChainIds?.firstOrNull { it.chainId == cid && filteredTokens.contains(it.tokenAddress) }?.tokenAddress
                 ?: run {
@@ -285,7 +288,6 @@ internal class SquidProcessor(parser: ParserProtocol) : BaseProcessor(parser), I
         selectedChainId?.let {
             this.tokens?.let {
                 for (token in it) {
-                    Logger.e({"token: $token"})
                     parser.asNativeMap(token)?.let { token ->
                         if (parser.asString(token.get("chainId")) == selectedChainId) {
                             options.add(processor.received(null, token))

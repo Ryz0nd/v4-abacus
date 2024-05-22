@@ -68,6 +68,7 @@ internal class OnboardingSupervisor(
             OnboardingConfigs.RouterVersion.SkipV1 -> {
                 retrieveSkipTransferChains()
                 retrieveSkipTransferAssets()
+                retrieveCctpChainIds()
                 return
             } else -> {}
         }

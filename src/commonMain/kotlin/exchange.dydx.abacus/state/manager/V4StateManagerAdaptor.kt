@@ -298,6 +298,7 @@ class V4StateManagerAdaptor(
                 AppConfigs.RouterVersion.SkipV1 -> {
                     retrieveSkipTransferChains()
                     retrieveSkipTransferAssets()
+                    retrieveCctpChainIds()
                     return
                 } else -> {}
             }
@@ -783,6 +784,13 @@ class V4StateManagerAdaptor(
     }
 
     private fun retrieveSkipTransferAssets() {
+        val url2 = configs.squidV2Assets()
+        val squidIntegratorId = environment.squidIntegratorId
+        if (url2 != null && squidIntegratorId != null) {
+            val header = iMapOf("x-integrator-id" to squidIntegratorId)
+            get(url2, null, header) { _, response, httpCode, _ ->
+            }
+        }
         val oldState = stateMachine.state
         val assetsUrl = configs.skipV1Assets()
         if (assetsUrl != null) {
